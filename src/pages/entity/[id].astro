@@ -10,17 +10,18 @@ export function getStaticPaths() {
 const { node } = Astro.props;
 const nodes = getKnowledgeNodes();
 const byTitle = new Map(nodes.map((n) => [n.title.toLowerCase(), n]));
+const base = import.meta.env.BASE_URL;
 const renderedBody = marked.parse(
   node.body.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_: string, target: string, label?: string) => {
     const found = byTitle.get(target.trim().toLowerCase());
-    return found ? `[${label?.trim() || target.trim()}](/entity/${found.id})` : `**${label?.trim() || target.trim()}**`;
+    return found ? `[${label?.trim() || target.trim()}](${base}entity/${found.id})` : `**${label?.trim() || target.trim()}**`;
   })
 );
 const incoming = nodes.filter((n) => n.links.some((link) => link.toLowerCase() === node.title.toLowerCase()));
 ---
 <BaseLayout title={`${node.title} — Industry Atlas`} description={node.summary}>
   <article class="entity-page">
-    <a class="back" href="/">← Industry Atlas</a>
+    <a class="back" href={base}>← Industry Atlas</a>
     <div class="entity-title-row">
       <div>
         <span class={`type type-${node.type}`}>{node.type}</span>
@@ -41,9 +42,9 @@ const incoming = nodes.filter((n) => n.links.some((link) => link.toLowerCase() =
         <div class="connection-grid">
           {node.links.map((title: string) => {
             const target = byTitle.get(title.toLowerCase());
-            return target ? <a href={`/entity/${target.id}`}>→ {target.title}<small>{target.type}</small></a> : null;
+            return target ? <a href={`${base}entity/${target.id}`}>→ {target.title}<small>{target.type}</small></a> : null;
           })}
-          {incoming.map((source) => <a href={`/entity/${source.id}`}>← {source.title}<small>{source.type}</small></a>)}
+          {incoming.map((source) => <a href={`${base}entity/${source.id}`}>← {source.title}<small>{source.type}</small></a>)}
         </div>
       </section>
     )}
