@@ -5,6 +5,7 @@ import { getKnowledgeNodes } from '@/lib/knowledge';
 const nodes = getKnowledgeNodes();
 const companies = nodes.filter((n) => n.type === 'company');
 const technologies = nodes.filter((n) => n.type === 'technology');
+const base = import.meta.env.BASE_URL;
 ---
 <BaseLayout>
   <section class="hero">
@@ -13,7 +14,7 @@ const technologies = nodes.filter((n) => n.type === 'technology');
     <p class="lede">從技術、公司、產品、應用到事件與證據，把散落的研究變成可探索的產業地圖。Markdown 是知識本體，網站只是它的視覺投影。</p>
     <div class="hero-actions">
       <a class="button primary" href="#graph">Explore the graph</a>
-      <a class="button" href="/entity/ddr3">Start with DDR3</a>
+      <a class="button" href={`${base}entity/ddr3`}>Start with DDR3</a>
     </div>
   </section>
 
@@ -29,7 +30,7 @@ const technologies = nodes.filter((n) => n.type === 'technology');
       <div><span class="eyebrow">INDUSTRY LENSES</span><h2>Start from an industry.</h2></div>
       <p>同一個 entity 可以同時出現在不同產業；Industry 只是觀看世界的一種 lens。</p>
     </div>
-    <a class="industry-card" href="/entity/memory">
+    <a class="industry-card" href={`${base}entity/memory`}>
       <div>
         <span class="pill">LIVE · FIRST VERTICAL</span>
         <h3>Memory</h3>
@@ -57,7 +58,7 @@ const technologies = nodes.filter((n) => n.type === 'technology');
     </div>
     <div class="entity-grid">
       {nodes.filter((n) => n.type !== 'industry').map((node) => (
-        <a class="entity-card" href={`/entity/${node.id}`}>
+        <a class="entity-card" href={`${base}entity/${node.id}`}>
           <span class={`type type-${node.type}`}>{node.type}</span>
           <h3>{node.title}</h3>
           <p>{node.summary ?? 'Explore this node in the industry graph.'}</p>
