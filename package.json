@@ -1,0 +1,22 @@
+{
+  "name": "industry-atlas",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "latest",
+    "astro": "latest",
+    "d3": "^7.9.0",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "typescript": "^5.9.2"
+  }
+}
