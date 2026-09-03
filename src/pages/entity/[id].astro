@@ -1,0 +1,51 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getKnowledgeNodes } from '@/lib/knowledge';
+import { marked } from 'marked';
+
+export function getStaticPaths() {
+  return getKnowledgeNodes().map((node) => ({ params: { id: node.id }, props: { node } }));
+}
+
+const { node } = Astro.props;
+const nodes = getKnowledgeNodes();
+const byTitle = new Map(nodes.map((n) => [n.title.toLowerCase(), n]));
+const renderedBody = marked.parse(
+  node.body.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_: string, target: string, label?: string) => {
+    const found = byTitle.get(target.trim().toLowerCase());
+    return found ? `[${label?.trim() || target.trim()}](/entity/${found.id})` : `**${label?.trim() || target.trim()}**`;
+  })
+);
+const incoming = nodes.filter((n) => n.links.some((link) => link.toLowerCase() === node.title.toLowerCase()));
+---
+<BaseLayout title={`${node.title} — Industry Atlas`} description={node.summary}>
+  <article class="entity-page">
+    <a class="back" href="/">← Industry Atlas</a>
+    <div class="entity-title-row">
+      <div>
+        <span class={`type type-${node.type}`}>{node.type}</span>
+        <h1>{node.title}</h1>
+        {node.summary && <p class="lede">{node.summary}</p>}
+      </div>
+      <aside class="meta-card">
+        <div><small>Industries</small><strong>{node.industries.join(' · ') || '—'}</strong></div>
+        <div><small>Status</small><strong>{node.status ?? '—'}</strong></div>
+        <div><small>As of</small><strong>{node.asOf ?? '—'}</strong></div>
+        <div><small>Source file</small><code>{node.path}</code></div>
+      </aside>
+    </div>
+    <div class="article-body" set:html={renderedBody}></div>
+    {(node.links.length > 0 || incoming.length > 0) && (
+      <section class="connections">
+        <h2>Connections</h2>
+        <div class="connection-grid">
+          {node.links.map((title: string) => {
+            const target = byTitle.get(title.toLowerCase());
+            return target ? <a href={`/entity/${target.id}`}>→ {target.title}<small>{target.type}</small></a> : null;
+          })}
+          {incoming.map((source) => <a href={`/entity/${source.id}`}>← {source.title}<small>{source.type}</small></a>)}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>

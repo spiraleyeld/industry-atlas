@@ -1,0 +1,24 @@
+---
+import '@/styles/global.css';
+const { title = 'Industry Atlas', description = 'Explore how industries actually work.' } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">INDUSTRY ATLAS</a>
+      <nav>
+        <a href="/#industries">Industries</a>
+        <a href="/#graph">Graph</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer>Markdown-first · evidence-aware · graph-native</footer>
+  </body>
+</html>
