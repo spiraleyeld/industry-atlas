@@ -6,6 +6,10 @@ The core idea is simple: industries are **views over shared entities**, not isol
 
 The first vertical is **Memory**, starting with **DDR3 / Specialty DRAM**.
 
+## Website
+
+GitHub Pages target: `https://spiraleyeld.github.io/industry-atlas/`
+
 ## Stack
 
 - Astro + TypeScript
